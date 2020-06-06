@@ -3,12 +3,24 @@ class Song < ActiveRecord::Base
   belongs_to :genre
 
   def get_genre_name
+    self.genre.name 
   end
 
+  def artist_exists?(artist_name)
+    if Artist.all.find{|one_artist| one_artist.name = artist_name}
+      return true 
+    else return false 
+    end 
+  end 
+    
   def drake_made_this
-    # when this method is called it should assign the song's artist to Drake
-    # Drake doesn't exist in the database as an artist yet, so you'll have to create a record
-    # Hint: you won't want to create an artist record every time this method is called, only if an Drake is *not found*
-
+    if artist_exists?("Drake")
+      artist_object = Artist.all.find{|one_artist| one_artist.name = "Drake"}
+    else 
+      artist_object = Artist.create(:name=>"Drake")
+    end 
+    self.artist = artist_object
+    artist_object.songs << self 
   end
+
 end
